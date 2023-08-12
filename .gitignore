@@ -34,3 +34,4 @@ override.tf.json
 terraform.rc
 .env
 log/*.txt
+tf-tutorial-iam_accessKeys.csv
