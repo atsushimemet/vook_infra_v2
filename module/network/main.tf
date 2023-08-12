@@ -61,6 +61,14 @@ resource "aws_route_table_association" "public" {
   subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
+#--------------------------------------------------------------
+# NAT
+#--------------------------------------------------------------
+resource "aws_nat_gateway" "default" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public["a"].id
+  depends_on    = [aws_internet_gateway.default]
+}
 
 #--------------------------------------------------------------
 # Private subnet
