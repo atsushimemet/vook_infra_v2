@@ -89,12 +89,8 @@ resource "aws_iam_instance_profile" "systems-manager" {
 #--------------------------------------------------------------
 # EC2
 #--------------------------------------------------------------
-data "aws_ami" "amzn2" {
-  name = "ami-06fdbb60c8e83aa5e"
-}
-
 resource "aws_instance" "ec2" {
-  ami                         = data.aws_ami.amzn2.name
+  ami                         = "ami-06fdbb60c8e83aa5e"
   instance_type               = "t2.micro"
   subnet_id                   = var.subnet_ids[0]
   associate_public_ip_address = "false"
