@@ -61,3 +61,18 @@ resource "aws_route_table_association" "public" {
   subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
+
+#--------------------------------------------------------------
+# Private subnet
+#--------------------------------------------------------------
+resource "aws_subnet" "private" {
+  for_each = var.pri_cidrs
+
+  vpc_id                  = aws_vpc.default.id
+  cidr_block              = each.value
+  availability_zone       = "${var.region}${each.key}"
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "${var.name}-private-${each.key}"
+  }
+}
