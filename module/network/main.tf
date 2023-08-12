@@ -28,3 +28,18 @@ resource "aws_eip" "nat" {
   domain     = "vpc"
   depends_on = [aws_internet_gateway.default]
 }
+
+#--------------------------------------------------------------
+# Public subnet
+#--------------------------------------------------------------
+resource "aws_subnet" "public" {
+  for_each = var.pub_cidrs
+
+  vpc_id                  = aws_vpc.default.id
+  cidr_block              = each.value
+  availability_zone       = "${var.region}${each.key}"
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "${var.name}-public-${each.key}"
+  }
+}
