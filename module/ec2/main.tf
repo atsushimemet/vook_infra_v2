@@ -1,11 +1,4 @@
 #--------------------------------------------------------------
-# AMI
-#--------------------------------------------------------------
-data "aws_ami" "amzn2" {
-  name = "ami-06fdbb60c8e83aa5e"
-}
-
-#--------------------------------------------------------------
 # Security group
 #--------------------------------------------------------------
 
@@ -92,3 +85,22 @@ resource "aws_iam_instance_profile" "systems-manager" {
   name = "${var.app_name}-ec2-instance-profile"
   role = aws_iam_role.ec2.name
 }
+
+#--------------------------------------------------------------
+# EC2
+#--------------------------------------------------------------
+data "aws_ami" "amzn2" {
+  name = "ami-06fdbb60c8e83aa5e"
+}
+
+resource "aws_instance" "ec2" {
+  ami                         = data.aws_ami.amzn2.name
+  instance_type               = "t2.micro"
+  subnet_id                   = var.subnet_ids[0]
+  associate_public_ip_address = "false"
+  vpc_security_group_ids      = [aws_security_group.ec2.id]
+  iam_instance_profile        = aws_iam_instance_profile.systems-manager.name
+
+  user_data = file("./script.sh")
+}
+
