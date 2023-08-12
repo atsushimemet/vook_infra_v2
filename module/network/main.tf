@@ -20,3 +20,11 @@ resource "aws_internet_gateway" "default" {
     Name = "${var.name}-igw"
   }
 }
+
+#--------------------------------------------------------------
+# Elastic IP
+#--------------------------------------------------------------
+resource "aws_eip" "nat" {
+  domain     = "vpc"
+  depends_on = [aws_internet_gateway.default]
+}
