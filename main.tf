@@ -31,6 +31,7 @@ module "ec2" {
   app_name   = var.name
   vpc_id     = module.network.vpc_id
   subnet_ids = module.network.pub_subnet_ids
+  key_name   = "${var.name}-ec2-key"
 }
 
 module "rds" {
