@@ -93,9 +93,10 @@ resource "aws_instance" "ec2" {
   ami                         = "ami-06fdbb60c8e83aa5e"
   instance_type               = "t2.micro"
   subnet_id                   = var.subnet_ids[0]
-  associate_public_ip_address = "false"
+  associate_public_ip_address = "true"
   vpc_security_group_ids      = [aws_security_group.ec2.id]
   iam_instance_profile        = aws_iam_instance_profile.systems-manager.name
+  key_name                    = var.key_name
 
   user_data = file("${path.module}/script.sh")
 }
@@ -122,6 +123,14 @@ resource "local_file" "private_key_pem" {
   content  = tls_private_key.keygen.private_key_pem
   provisioner "local-exec" {
     command = "chmod 600 ${local.private_key_file}"
+  }
+}
+
+resource "local_file" "public_key_openssh" {
+  filename = local.public_key_file
+  content  = tls_private_key.keygen.public_key_openssh
+  provisioner "local-exec" {
+    command = "chmod 600 ${local.public_key_file}"
   }
 }
 
